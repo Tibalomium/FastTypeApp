@@ -15,17 +15,34 @@ class GameViewController: UIViewController {
     //To not have to nil check
     var controller: GameController = GameController(ui:UIViewController())
     
+    var formattedString = NSMutableAttributedString()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         controller = GameController(ui:self)
     }
     
+    //TODO: Erase of first character crashes the program
     @IBAction func userTyped(_ sender: UITextField) {
-        /*if wordToType.text == userInput.text {
-            wordToType.text = "Winner!"
-        }*/
-        let a = controller.isCorrect(input:"Winner")
+        
+        var index = -1
+        
+        index += userInput.text?.count ?? 0
+        
+        if let word = wordToType.text,
+           let userWord = userInput.text {
+            if index >= 0 && index < word.count && String(word[word.index(word.startIndex, offsetBy: index)]) == String(userWord[userWord.index(userWord.startIndex, offsetBy: index)]) {
+            }
+            else {
+                if let text = userInput.attributedText {
+                    let string: NSMutableAttributedString
+                    string = NSMutableAttributedString(attributedString: text)
+                    string.addAttribute(.foregroundColor, value: UIColor.red, range: NSRange(location:index,length:1))
+                    userInput.attributedText = string
+                }
+            }
+        }
     }
     
     /*
