@@ -61,12 +61,28 @@
                                     <action selector="userTyped:" destination="BT6-3n-lNg" eventType="editingChanged" id="URT-gV-jQD"/>
                                 </connections>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WDx-oM-4Ko">
+                                <rect key="frame" x="238" y="80" width="91" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NOg-I9-6Yg">
+                                <rect key="frame" x="53" y="80" width="78" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="iMq-0j-hVd"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="r1b-a4-ahZ"/>
                     <connections>
+                        <outlet property="scoreLabel" destination="WDx-oM-4Ko" id="pSr-ag-JCm"/>
+                        <outlet property="timeLeftLabel" destination="NOg-I9-6Yg" id="01s-rg-X2L"/>
                         <outlet property="userInput" destination="IuT-D1-HNv" id="nI0-L0-1Ke"/>
                         <outlet property="wordToType" destination="y4L-D3-IGi" id="0QU-qX-XGb"/>
                     </connections>
