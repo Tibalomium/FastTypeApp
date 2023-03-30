@@ -15,39 +15,15 @@ class GameViewController: UIViewController {
     @IBOutlet weak var userInput: UITextField!
     
     private var controller: GameController = GameController()
-    private var timer: Timer?
-    private var time = 8
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        wordToType.text = controller.getWord()
-        setScore(score: 0)
-        updateTime()
-        resetTimer()
-    }
-    
-    func timerTick(timer: Timer) {
-        time -= time > 0 ? 1 : 0
-        updateTime()
+        controller.start(gvc: self)
     }
     
     @IBAction func userTyped(_ sender: UITextField) {
-        if let word = userInput.text {
-            if controller.checkInput(input: word, time: time) {
-                wordToType.text = controller.getWord()
-                userInput.text = ""
-                setScore(score: controller.getScore())
-                time = 5
-                updateTime()
-                resetTimer()
-                if wordToType.text == "" {
-                    timer?.invalidate()
-                    wordToType.text = "Good Job!!"
-                }
-            }
-            else if !controller.isCorrectChar(input: word) {
-                errorLastChar()
-            }
+        if let input = userInput.text {
+            controller.inputUpdated(input: input)
         }
     }
     
@@ -56,7 +32,7 @@ class GameViewController: UIViewController {
         
         index += userInput.text?.count ?? 0
         
-        //remove first if-statement
+        //remove first if-statement?
         if let word = wordToType.text,
            let userWord = userInput.text {
             //move into varibles for clarity
@@ -72,17 +48,20 @@ class GameViewController: UIViewController {
         }
     }
     
-    private func setScore(score: Int) {
+    func setScore(score: Int) {
         scoreLabel.text = "Score: \(score)"
     }
     
-    private func updateTime() {
+    func setTime(time: Int) {
         timeLeftLabel.text = "Time: \(time)"
     }
     
-    private func resetTimer() {
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: timerTick(timer:))
+    func setWordToType(word: String) {
+        wordToType.text = word
+    }
+    
+    func clearInput() {
+        userInput.text = ""
     }
     
     /*
@@ -94,10 +73,6 @@ class GameViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-    
-    deinit {
-        timer?.invalidate()
-    }
 
 }
 
@@ -105,27 +80,45 @@ class GameController {
 
     private let model = GameModel()
     private var currentWord = ""
-    private var currentScore: Int  = 0
+    private var currentScore  = 0
+    private var view: GameViewController?
+    private var timer: Timer?
+    private var time = 8
     
     init() {
         currentWord = model.getNextWord()
     }
     
-    func checkInput(input: String, time: Int) -> Bool {
-        if input == currentWord {
-            currentWord = model.getNextWord()
-            if time > 1 {
-                currentScore += 1
-            }
-            else {
-                currentScore -= 1
-            }
-            return true
-        }
-        return false
+    func start(gvc: GameViewController) {
+        view = gvc
+        reset()
     }
     
-    func isCorrectChar(input: String) -> Bool{
+    func reset() {
+        view?.setWordToType(word: currentWord)
+        view?.setScore(score: currentScore)
+        view?.clearInput()
+        time = 8
+        resetTimer()
+    }
+    
+    func inputUpdated(input: String) {
+        if input == currentWord {
+            currentScore += time > 1 ? 1 : -1
+            currentWord = model.getNextWord()
+            if currentWord == "" {
+                
+            }
+            else {
+                reset()
+            }
+        }
+        else if !isCorrectChar(input: input) {
+            view?.errorLastChar()
+        }
+    }
+    
+    func isCorrectChar(input: String) -> Bool {
         let index = input.count - 1
         
         if index >= 0 && index < currentWord.count && String(currentWord[currentWord.index(currentWord.startIndex, offsetBy: index)]) == String(input[input.index(input.startIndex, offsetBy: index)]) {
@@ -138,11 +131,19 @@ class GameController {
         }
     }
     
-    func getWord() -> String {
-        return currentWord
+    func timerTick(timer: Timer) {
+        time -= time > 0 ? 1 : 0
+        view?.setTime(time: time)
     }
-    func getScore() -> Int {
-        return currentScore
+    
+    private func resetTimer() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: timerTick(timer:))
+    }
+    
+    
+    deinit {
+        timer?.invalidate()
     }
 }
 
@@ -163,5 +164,18 @@ class GameModel {
     
     func getNextWord() -> String {
         return words.popLast() ?? ""
+    }
+    
+    func saveScore(name: String, score: Int) {
+        let defaults = UserDefaults.standard
+        
+        var highscore = defaults.object(forKey:"Highscore") as? [String: Int] ?? [String: Int]()
+        
+        /*if highscore.keys.contains(name) && highscore[name] < score {
+            highscore[name] = score
+        }*/
+        
+        //let sortedHighscore = highscore.sorted(by: >).filter({highscore[$0].})
+        
     }
 }
