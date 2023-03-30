@@ -15,10 +15,15 @@ class GameViewController: UIViewController {
     @IBOutlet weak var userInput: UITextField!
     
     private var controller: GameController = GameController()
+    var name: String = ""
+    let segueIdGoToHighScore = "goToEnd"
+    var gameModel: GameModel?
+    var timePerWord = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        controller.start(gvc: self)
+        userInput.becomeFirstResponder()
+        controller.start(gvc: self, timePerWord: timePerWord, name: name)
     }
     
     @IBAction func userTyped(_ sender: UITextField) {
@@ -64,6 +69,21 @@ class GameViewController: UIViewController {
         userInput.text = ""
     }
     
+    func segueToHighscore(model: GameModel) {
+        gameModel = model
+        performSegue(withIdentifier: segueIdGoToHighScore, sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == segueIdGoToHighScore {
+            if let destinationVC = segue.destination as? HighScoreViewController
+            {
+                if let gameModel {
+                    destinationVC.model = gameModel
+                }
+            }
+        }
+    }
     /*
     // MARK: - Navigation
 
@@ -74,108 +94,4 @@ class GameViewController: UIViewController {
     }
     */
 
-}
-
-class GameController {
-
-    private let model = GameModel()
-    private var currentWord = ""
-    private var currentScore  = 0
-    private var view: GameViewController?
-    private var timer: Timer?
-    private var time = 8
-    
-    init() {
-        currentWord = model.getNextWord()
-    }
-    
-    func start(gvc: GameViewController) {
-        view = gvc
-        reset()
-    }
-    
-    func reset() {
-        view?.setWordToType(word: currentWord)
-        view?.setScore(score: currentScore)
-        view?.clearInput()
-        time = 8
-        resetTimer()
-    }
-    
-    func inputUpdated(input: String) {
-        if input == currentWord {
-            currentScore += time > 1 ? 1 : -1
-            currentWord = model.getNextWord()
-            if currentWord == "" {
-                
-            }
-            else {
-                reset()
-            }
-        }
-        else if !isCorrectChar(input: input) {
-            view?.errorLastChar()
-        }
-    }
-    
-    func isCorrectChar(input: String) -> Bool {
-        let index = input.count - 1
-        
-        if index >= 0 && index < currentWord.count && String(currentWord[currentWord.index(currentWord.startIndex, offsetBy: index)]) == String(input[input.index(input.startIndex, offsetBy: index)]) {
-            
-            return true
-        }
-        //remove else
-        else {
-            return false
-        }
-    }
-    
-    func timerTick(timer: Timer) {
-        time -= time > 0 ? 1 : 0
-        view?.setTime(time: time)
-    }
-    
-    private func resetTimer() {
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: timerTick(timer:))
-    }
-    
-    
-    deinit {
-        timer?.invalidate()
-    }
-}
-
-class GameModel {
-    private var words: [String] = []
-    
-    init() {
-        initializeWords()
-    }
-    
-    func initializeWords() {
-        words.append("Hejsan")
-        words.append("Hoppsan")
-        words.append("Jobbar")
-        words.append("Pizza")
-        words.append("Lastbilen")
-    }
-    
-    func getNextWord() -> String {
-        return words.popLast() ?? ""
-    }
-    
-    func saveScore(name: String, score: Int) {
-        let defaults = UserDefaults.standard
-        
-        var highscore = defaults.object(forKey:"Highscore") as? [String: Int] ?? [String: Int]()
-        
-        /*if highscore.keys.contains(name) && highscore[name] < score {
-            highscore[name] = score
-        }*/
-        
-        //let sortedHighscore = highscore.sorted(by: >).filter({highscore[$0].})
-        
-    }
 }
