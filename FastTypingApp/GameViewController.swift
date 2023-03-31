@@ -37,7 +37,7 @@ class GameViewController: UIViewController {
     func errorLastChar() {
         if let text = userInput.attributedText {
             if text.length > 0 {
-                var index = -1 + text.length
+                let index = -1 + text.length
                 
                 let string = NSMutableAttributedString(attributedString: text)
                 string.addAttribute(.foregroundColor, value: UIColor.red, range: NSRange(location:index,length:1))

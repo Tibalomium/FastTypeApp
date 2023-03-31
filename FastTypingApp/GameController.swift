@@ -16,8 +16,8 @@ class GameController {
     private var timer: Timer?
     private var timePerWord = 0
     private var time = 0
-    var name: String = ""
-    var wordPlayedCounter = 10
+    private var name: String = ""
+    private var wordPlayedCounter = 10
     
     init() {
         currentWord = model.getNextWord()
@@ -30,7 +30,7 @@ class GameController {
         reset()
     }
     
-    func reset() {
+    private func reset() {
         time = timePerWord
         view?.setWordToType(word: currentWord)
         view?.setScore(score: currentScore)
@@ -57,7 +57,7 @@ class GameController {
         }
     }
     
-    func isCorrectChar(input: String) -> Bool {
+    private func isCorrectChar(input: String) -> Bool {
         let index = input.count - 1
         
         if index >= 0 && index < currentWord.count && String(currentWord[currentWord.index(currentWord.startIndex, offsetBy: index)]) == String(input[input.index(input.startIndex, offsetBy: index)]) {
@@ -68,7 +68,7 @@ class GameController {
         return false
     }
     
-    func timerTick(timer: Timer) {
+    private func timerTick(timer: Timer) {
         time -= time > 0 ? 1 : 0
         view?.setTime(time: time)
     }
