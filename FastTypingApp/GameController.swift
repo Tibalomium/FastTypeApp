@@ -17,6 +17,7 @@ class GameController {
     private var timePerWord = 0
     private var time = 0
     var name: String = ""
+    var wordPlayedCounter = 10
     
     init() {
         currentWord = model.getNextWord()
@@ -42,9 +43,10 @@ class GameController {
         if input == currentWord {
             currentScore += time > 0 ? 1 : -1
             currentWord = model.getNextWord()
-            if currentWord == "" {
+            wordPlayedCounter -= 1
+            if currentWord == "" || wordPlayedCounter == 0 {
                 model.saveScore(name: name, score: currentScore)
-                view?.segueToHighscore(model: model)
+                view?.segueToHighscore(model: model, currentScore: currentScore)
             }
             else {
                 reset()

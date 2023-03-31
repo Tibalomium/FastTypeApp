@@ -8,28 +8,25 @@
 import Foundation
 
 class GameModel {
-    private var words: [String] = []
-    
-    init() {
-        initializeWords()
-    }
-    
-    func initializeWords() {
-        words.append("Hejsan")
-        words.append("Hoppsan")
-        words.append("Jobbar")
-        words.append("Pizza")
-        words.append("Lastbilen")
-    }
+    private var words: [String] = ["deadly", "dragon", "cathedral",
+    "license", "mole", "withdraw", "camp", "elbow", "authority",
+    "offend", "incentive", "crutch", "warm", "tribe", "soprano",
+    "alive", "integration", "haskell", "rust", "java", "kotlin",
+    "swift", "switch", "lace", "draft", "car", "revoke", "sip",
+    "effect", "production", "hostage", "literacy", "cotton",
+    "accountant",  "conservative", "management", "imagine",
+    "terms", "cheek", "creed", "notorious", "landowner", "pasture",
+    "publisher", "praise", "implication", "pigeon", "photography",
+    "bishop", "glimpse", "occasion", "emphasis", "seek", "memory"]
     
     func getNextWord() -> String {
-        return words.popLast() ?? ""
+        return words.randomElement() ?? ""
     }
     
     func getScore() -> [String: Int] {
         let defaults = UserDefaults.standard
         
-        var highscore = defaults.object(forKey:"Highscore") as? [String: Int] ?? [String: Int]()
+        let highscore = defaults.object(forKey:"Highscore") as? [String: Int] ?? [String: Int]()
         
         return highscore
     }
@@ -42,8 +39,7 @@ class GameModel {
         highscore[name] = highscore[name] ?? score - 1 < score ? score : highscore[name]
                 
         let arrayHighscore = highscore.sorted {$0.1 > $1.1}
-        let sliceArrayHighscore = Array(arrayHighscore.prefix(10))
-        let sortedHighscore = Dictionary(uniqueKeysWithValues: sliceArrayHighscore)
+        let sortedHighscore = Dictionary(uniqueKeysWithValues: Array(arrayHighscore.prefix(10)))
         defaults.set(sortedHighscore, forKey: "Highscore")
         
         

@@ -10,7 +10,9 @@ import UIKit
 class HighScoreViewController: UIViewController, UITableViewDataSource {
 
     var model: GameModel?
+    var currentScore = 0
     
+    @IBOutlet weak var playerScoreLabel: UILabel!
     var gameData = [(String, Int)]()
 
     @IBOutlet weak var highscoreTable: UITableView!
@@ -19,6 +21,7 @@ class HighScoreViewController: UIViewController, UITableViewDataSource {
         if let model {
             gameData = Array(model.getScore().sorted {$0.1 > $1.1})
         }
+        playerScoreLabel.text = "Your score: \(currentScore)"
         highscoreTable.dataSource = self
     }
     
@@ -35,14 +38,8 @@ class HighScoreViewController: UIViewController, UITableViewDataSource {
         return cell
         
     }
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @IBAction func playAgain(_ sender: Any) {
+       performSegue(withIdentifier: "unwindToBeg", sender: self)
     }
-    */
-
 }

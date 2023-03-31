@@ -18,6 +18,7 @@ class GameViewController: UIViewController {
     var name: String = ""
     let segueIdGoToHighScore = "goToEnd"
     var gameModel: GameModel?
+    var currentScore = 0
     var timePerWord = 0
     
     override func viewDidLoad() {
@@ -69,8 +70,9 @@ class GameViewController: UIViewController {
         userInput.text = ""
     }
     
-    func segueToHighscore(model: GameModel) {
+    func segueToHighscore(model: GameModel, currentScore: Int) {
         gameModel = model
+        self.currentScore = currentScore
         performSegue(withIdentifier: segueIdGoToHighScore, sender: self)
     }
     
@@ -80,6 +82,7 @@ class GameViewController: UIViewController {
             {
                 if let gameModel {
                     destinationVC.model = gameModel
+                    destinationVC.currentScore = currentScore
                 }
             }
         }
