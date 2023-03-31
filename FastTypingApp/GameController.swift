@@ -64,10 +64,8 @@ class GameController {
             
             return true
         }
-        //remove else
-        else {
-            return false
-        }
+        
+        return false
     }
     
     func timerTick(timer: Timer) {

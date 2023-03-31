@@ -33,23 +33,15 @@ class GameViewController: UIViewController {
         }
     }
     
+    //To mark last char typed as wrong
     func errorLastChar() {
-        var index = -1
-        
-        index += userInput.text?.count ?? 0
-        
-        //remove first if-statement?
-        if let word = wordToType.text,
-           let userWord = userInput.text {
-            //move into varibles for clarity
-            if index >= 0 && index < word.count && String(word[word.index(word.startIndex, offsetBy: index)]) == String(userWord[userWord.index(userWord.startIndex, offsetBy: index)]) {
-            }
-            else if userWord.count > 0 {
-                if let text = userInput.attributedText {
-                    let string = NSMutableAttributedString(attributedString: text)
-                    string.addAttribute(.foregroundColor, value: UIColor.red, range: NSRange(location:index,length:1))
-                    userInput.attributedText = string
-                }
+        if let text = userInput.attributedText {
+            if text.length > 0 {
+                var index = -1 + text.length
+                
+                let string = NSMutableAttributedString(attributedString: text)
+                string.addAttribute(.foregroundColor, value: UIColor.red, range: NSRange(location:index,length:1))
+                userInput.attributedText = string
             }
         }
     }
@@ -87,14 +79,4 @@ class GameViewController: UIViewController {
             }
         }
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
